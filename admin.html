@@ -498,7 +498,7 @@ td.date-col {
 
 <script type="module">
 import { initializeApp }             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const ADMIN_LOGIN = "admin";
 const ADMIN_PASS  = "august14";
@@ -544,9 +544,10 @@ window.doLogout = () => {
 
 window.loadGuests = () => {
   document.getElementById('tbl-body').innerHTML = '<div class="loading-msg">Загрузка…</div>';
-  onValue(ref(db,'guests'), snap => {
+  get(ref(db,'guests')).then(snap => {
     guests = [];
     const d = snap.val();
+    console.log('Firebase guests:', d);
     if (d) Object.entries(d).forEach(([k,v]) => {
       const attending = v.attending === true || String(v.attending) === 'true';
       guests.push({
@@ -562,7 +563,10 @@ window.loadGuests = () => {
     render();
     document.getElementById('last-upd').textContent =
       'Обновлено в ' + new Date().toLocaleTimeString('ru-RU');
-  }, { onlyOnce: true });
+  }).catch(error => {
+    console.error('Ошибка загрузки гостей:', error);
+    document.getElementById('tbl-body').innerHTML = '<div class="empty">Ошибка загрузки данных. Проверьте настройки Firebase.</div>';
+  });
 };
 
 window.setFilter = mode => {
