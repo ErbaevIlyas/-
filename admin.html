@@ -554,7 +554,16 @@ window.doLogout = () => {
 
 window.loadGuests = () => {
   document.getElementById('tbl-body').innerHTML = '<div class="loading-msg">Загрузка…</div>';
-  get(ref(db,'guests')).then(snap => {
+  document.getElementById('status-msg').textContent = `Подключение к ${firebaseConfig.databaseURL}`;
+
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Таймаут запроса — проверьте Firebase и подключение')), 10000)
+  );
+
+  Promise.race([
+    get(ref(db,'guests')),
+    timeoutPromise
+  ]).then(snap => {
     guests = [];
     const d = snap.val();
     console.log('Firebase guests:', d);
