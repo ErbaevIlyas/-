@@ -14,4 +14,4 @@ jobs:
           echo "Pinging $SITE_URL"
           curl -I -L --max-time 30 "$SITE_URL" || true
     env:
-      SITE_URL: https://your-site.onrender.com
+      SITE_URL: ${{ secrets.RENDER_URL }}
