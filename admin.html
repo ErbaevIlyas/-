@@ -403,6 +403,20 @@ td.date-col {
 .badge-yes { background: var(--green-bg); color: var(--green); }
 .badge-no  { background: var(--red-bg);   color: var(--red); }
 
+.delete-btn {
+  border: none;
+  background: #f5f0ec;
+  color: var(--ink);
+  padding: 6px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.delete-btn:hover {
+  background: rgba(245,240,236,0.9);
+  transform: translateY(-1px);
+}
+
 .status-msg,
   .empty, .loading-msg {
   text-align: center;
@@ -507,7 +521,7 @@ td.date-col {
 
 <script type="module">
 import { initializeApp }             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const ADMIN_LOGIN = "admin";
 const ADMIN_PASS  = "august14";
@@ -650,6 +664,7 @@ window.render = () => {
       <th onclick="sortBy('attending')">Ответ${arr('attending')}</th>
       <th onclick="sortBy('guests')">Гостей${arr('guests')}</th>
       <th onclick="sortBy('timestamp')">Дата и время${arr('timestamp')}</th>
+      <th>Действия</th>
     </tr></thead>
     <tbody>
       ${list.map((g,i)=>`<tr>
@@ -658,6 +673,7 @@ window.render = () => {
         <td><span class="badge ${g.attending?'badge-yes':'badge-no'}">${g.attending?'Приду':'Не приду'}</span></td>
         <td>${g.attending? g.guests : 0}</td>
         <td class="date-col">${esc(g.dateStr)}</td>
+        <td><button class="delete-btn" onclick="deleteGuest('${g.id}')">Удалить</button></td>
       </tr>`).join('')}
     </tbody>
   </table>`;
@@ -666,6 +682,17 @@ window.render = () => {
 function esc(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+window.deleteGuest = async id => {
+  if (!confirm('Вы уверены, что хотите удалить эту запись?')) return;
+  try {
+    await remove(ref(db, `guests/${id}`));
+    loadGuests();
+  } catch (error) {
+    console.error('Ошибка удаления гостя:', error);
+    alert('Не удалось удалить запись. Проверьте консоль.');
+  }
+};
 </script>
 </body>
 </html>
