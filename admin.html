@@ -403,12 +403,20 @@ td.date-col {
 .badge-yes { background: var(--green-bg); color: var(--green); }
 .badge-no  { background: var(--red-bg);   color: var(--red); }
 
-.empty, .loading-msg {
+.status-msg,
+  .empty, .loading-msg {
   text-align: center;
-  padding: 60px 20px;
+  padding: 18px 16px;
   color: var(--ink2);
   font-size: 14px;
   font-weight: 300;
+}
+
+.status-msg {
+  background: rgba(245, 233, 221, 0.65);
+  border: 1px solid rgba(212,175,140,0.25);
+  border-radius: 14px;
+  margin: 18px 20px;
 }
 
 @media (max-width: 640px) {
@@ -490,6 +498,7 @@ td.date-col {
       <input type="text" class="search" id="search" placeholder="Поиск…" oninput="render()">
     </div>
 
+    <div id="status-msg" class="status-msg">Загрузка гостей…</div>
     <div class="tbl-wrap">
       <div id="tbl-body" class="loading-msg">Загрузка…</div>
     </div>
@@ -549,22 +558,32 @@ window.loadGuests = () => {
     const d = snap.val();
     console.log('Firebase guests:', d);
     if (d) Object.entries(d).forEach(([k,v]) => {
-      const attending = v.attending === true || String(v.attending) === 'true';
+      const value = v.attending;
+      const attending = value === true
+        || value === 1
+        || String(value).toLowerCase() === 'true'
+        || String(value).toLowerCase() === 'yes'
+        || String(value).toLowerCase() === 'приду'
+        || String(value) === '1';
       guests.push({
         id: k,
         name:      v.name      || '—',
         attending,
-        guests:     Number(v.guests) || 1,
+        guests:     Number(v.guests) || (attending ? 1 : 0),
         dateStr:   v.dateStr   || '—',
         timestamp: v.timestamp || 0,
       });
     });
+    document.getElementById('status-msg').textContent = guests.length
+      ? `Найдено ${guests.length} запис${String(guests.length).endsWith('1') && guests.length !== 11 ? 'ь' : 'ей'}`
+      : 'Записи не найдены';
     updateStats();
     render();
     document.getElementById('last-upd').textContent =
       'Обновлено в ' + new Date().toLocaleTimeString('ru-RU');
   }).catch(error => {
     console.error('Ошибка загрузки гостей:', error);
+    document.getElementById('status-msg').textContent = 'Ошибка загрузки данных. Проверьте настройки Firebase.';
     document.getElementById('tbl-body').innerHTML = '<div class="empty">Ошибка загрузки данных. Проверьте настройки Firebase.</div>';
   });
 };
