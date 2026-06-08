@@ -583,8 +583,9 @@ window.loadGuests = () => {
       'Обновлено в ' + new Date().toLocaleTimeString('ru-RU');
   }).catch(error => {
     console.error('Ошибка загрузки гостей:', error);
-    document.getElementById('status-msg').textContent = 'Ошибка загрузки данных. Проверьте настройки Firebase.';
-    document.getElementById('tbl-body').innerHTML = '<div class="empty">Ошибка загрузки данных. Проверьте настройки Firebase.</div>';
+    const message = error && error.message ? error.message : 'Неизвестная ошибка Firebase';
+    document.getElementById('status-msg').textContent = `Ошибка Firebase: ${message}`;
+    document.getElementById('tbl-body').innerHTML = `<div class="empty">Ошибка загрузки данных: ${message}</div>`;
   });
 };
 
