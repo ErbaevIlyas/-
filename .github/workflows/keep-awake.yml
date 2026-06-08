@@ -1,0 +1,17 @@
+name: Keep Render site awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render site
+        run: |
+          echo "Pinging $SITE_URL"
+          curl -I -L --max-time 30 "$SITE_URL" || true
+    env:
+      SITE_URL: https://your-site.onrender.com
