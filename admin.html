@@ -547,13 +547,17 @@ window.loadGuests = () => {
   onValue(ref(db,'guests'), snap => {
     guests = [];
     const d = snap.val();
-    if (d) Object.entries(d).forEach(([k,v]) => guests.push({
-      id: k,
-      name:      v.name      || '—',
-      attending: v.attending,
-      dateStr:   v.dateStr   || '—',
-      timestamp: v.timestamp || 0,
-    }));
+    if (d) Object.entries(d).forEach(([k,v]) => {
+      const attending = v.attending === true || String(v.attending) === 'true';
+      guests.push({
+        id: k,
+        name:      v.name      || '—',
+        attending,
+        guests:     Number(v.guests) || 1,
+        dateStr:   v.dateStr   || '—',
+        timestamp: v.timestamp || 0,
+      });
+    });
     updateStats();
     render();
     document.getElementById('last-upd').textContent =

@@ -501,11 +501,11 @@ window.respond = async function(answer) {
     return;
   }
 
-  if (answer === 'yes' && (!count || count < 1 || count > 20)) {
-    countInput.classList.add('error');
-    countInput.focus();
-    setTimeout(() => countInput.classList.remove('error'), 1500);
-    return;
+  if (answer === 'yes') {
+    if (!count || count < 1 || count > 20) {
+      count = 1;
+      countInput.value = '1';
+    }
   }
 
   if (answer === 'no') count = 0;
