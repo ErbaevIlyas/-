@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Гости — Ринат & Дарина</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:      #f5f2ee;
+  --white:   #ffffff;
+  --ink:     #1a1714;
+  --ink2:    #6b6460;
+  --line:    rgba(26,23,20,0.1);
+  --warm:    #c9a96e;
+  --green:   #3a6b52;
+  --green-bg:#edf4ef;
+  --red:     #7a3a3a;
+  --red-bg:  #f5eded;
+}
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ── LOGIN ── */
+#login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+.login-wrap {
+  width: 100%;
+  max-width: 380px;
+  animation: appear 0.7s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-brand {
+  margin-bottom: 40px;
+}
+
+.login-brand .names {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.login-brand .sub {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--warm);
+}
+
+.login-card {
+  background: var(--white);
+  padding: 40px 36px;
+  position: relative;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--warm);
+}
+
+.field {
+  margin-bottom: 24px;
+}
+
+.field label {
+  display: block;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin-bottom: 10px;
+}
+
+.field input {
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-bottom: 1.5px solid var(--line);
+  background: transparent;
+  font-family: 'Jost', sans-serif;
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field input:focus { border-bottom-color: var(--ink); }
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover { background: #2e2a26; }
+
+.login-err {
+  font-size: 12px;
+  color: var(--red);
+  text-align: center;
+  margin-top: 14px;
+  display: none;
+  font-weight: 300;
+}
+.login-err.show { display: block; }
+
+/* ── ADMIN ── */
+#admin-panel { display: none; }
+
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.topbar-brand .mark {
+  width: 3px;
+  height: 28px;
+  background: var(--warm);
+  flex-shrink: 0;
+}
+
+.topbar-brand .label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+
+.topbar-brand .title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#last-upd {
+  font-size: 11px;
+  color: var(--ink2);
+  font-weight: 300;
+}
+
+.logout-btn {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink2);
+  background: none;
+  border: 1px solid var(--line);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  color: var(--ink);
+  border-color: rgba(26,23,20,0.3);
+}
+
+.main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 40px 60px;
+}
+
+/* stats */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat {
+  background: var(--white);
+  padding: 28px 24px;
+  position: relative;
+}
+
+.stat::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--line);
+}
+
+.stat.s-yes::before { background: var(--green); }
+.stat.s-no::before  { background: var(--red); }
+.stat.s-all::before { background: var(--warm); }
+
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 44px;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat.s-yes .stat-num { color: var(--green); }
+.stat.s-no  .stat-num { color: var(--red); }
+
+.stat-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+
+/* controls */
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.filter-btn {
+  height: 36px;
+  padding: 0 18px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: var(--white);
+  color: var(--ink2);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Jost', sans-serif;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.refresh-btn {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--warm);
+  border: 1px solid rgba(201,169,110,0.35);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Jost', sans-serif;
+}
+
+.refresh-btn:hover { background: rgba(201,169,110,0.07); }
+
+.search {
+  margin-left: auto;
+  height: 36px;
+  width: 200px;
+  border: none;
+  border-bottom: 1.5px solid var(--line);
+  background: transparent;
+  font-family: 'Jost', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink);
+  outline: none;
+  padding: 0 4px;
+  transition: border-color 0.2s;
+}
+
+.search::placeholder { color: rgba(107,100,96,0.4); }
+.search:focus { border-bottom-color: var(--ink); }
+
+/* table */
+.tbl-wrap {
+  background: var(--white);
+  overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+thead {
+  border-bottom: 1px solid var(--line);
+}
+
+thead th {
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--warm);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+thead th:hover { color: var(--ink); }
+
+tbody tr {
+  border-bottom: 1px solid var(--line);
+  transition: background 0.15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #faf8f5; }
+
+tbody td {
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 300;
+  vertical-align: middle;
+  color: var(--ink);
+}
+
+td.num-col {
+  color: var(--ink2);
+  font-size: 11px;
+  width: 36px;
+  font-weight: 400;
+}
+
+td.name-col {
+  font-weight: 400;
+  font-size: 15px;
+}
+
+td.date-col {
+  color: var(--ink2);
+  font-size: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.badge-yes { background: var(--green-bg); color: var(--green); }
+.badge-no  { background: var(--red-bg);   color: var(--red); }
+
+.empty, .loading-msg {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink2);
+  font-size: 14px;
+  font-weight: 300;
+}
+
+@media (max-width: 640px) {
+  .main { padding: 24px 16px 48px; }
+  .stats-row { grid-template-columns: 1fr; }
+  .topbar { padding: 0 20px; }
+  .search { width: 100%; margin-left: 0; }
+  .controls { gap: 6px; }
+  .login-card { padding: 32px 24px; }
+  thead th, tbody td { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <div class="login-brand">
+      <span class="names">Ринат &amp; Дарина</span>
+      <span class="sub">Панель администратора</span>
+    </div>
+    <div class="login-card">
+      <div class="field">
+        <label>Логин</label>
+        <input type="text" id="login-input" placeholder="Введите логин" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Пароль</label>
+        <input type="password" id="pass-input" placeholder="••••••" autocomplete="current-password">
+      </div>
+      <button class="submit-btn" onclick="doLogin()">Войти</button>
+      <p class="login-err" id="login-err">Неверный логин или пароль</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-panel">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="mark"></div>
+      <div>
+        <div class="label">Свадьба · 19 августа 2026</div>
+        <div class="title">Список гостей</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="last-upd"></span>
+      <button class="logout-btn" onclick="doLogout()">Выйти</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="stats-row">
+      <div class="stat s-all">
+        <div class="stat-num" id="s-total">—</div>
+        <div class="stat-label">Всего ответов</div>
+      </div>
+      <div class="stat s-yes">
+        <div class="stat-num" id="s-yes">—</div>
+        <div class="stat-label">Придут</div>
+      </div>
+      <div class="stat s-no">
+        <div class="stat-num" id="s-no">—</div>
+        <div class="stat-label">Не придут</div>
+      </div>
+      <div class="stat s-all">
+        <div class="stat-num" id="s-guests">—</div>
+        <div class="stat-label">Гостей всего</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="filter-btn active" id="f-all" onclick="setFilter('all')">Все</button>
+      <button class="filter-btn"        id="f-yes" onclick="setFilter('yes')">Придут</button>
+      <button class="filter-btn"        id="f-no"  onclick="setFilter('no')">Не придут</button>
+      <button class="refresh-btn" onclick="loadGuests()">↻ Обновить</button>
+      <input type="text" class="search" id="search" placeholder="Поиск…" oninput="render()">
+    </div>
+
+    <div class="tbl-wrap">
+      <div id="tbl-body" class="loading-msg">Загрузка…</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp }             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const ADMIN_LOGIN = "admin";
+const ADMIN_PASS  = "wedding2025";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyA055MX1CxBG_by9NKCS-1ezLmhi-8IfhQ",
+  authDomain:"wedding-94a25.firebaseapp.com",
+  databaseURL:"https://wedding-94a25-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"wedding-94a25",
+  storageBucket:"wedding-94a25.firebasestorage.app",
+  messagingSenderId:"294835402992",
+  appId:"1:294835402992:web:af91f365b0363a63a2ea35"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+let guests = [], filterMode = 'all', sortField = 'timestamp', sortAsc = false;
+
+window.doLogin = () => {
+  const l = document.getElementById('login-input').value.trim();
+  const p = document.getElementById('pass-input').value;
+  if (l === ADMIN_LOGIN && p === ADMIN_PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-panel').style.display  = 'block';
+    loadGuests();
+  } else {
+    document.getElementById('login-err').classList.add('show');
+    document.getElementById('pass-input').value = '';
+  }
+};
+
+window.doLogout = () => {
+  document.getElementById('admin-panel').style.display  = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  ['login-input','pass-input'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('login-err').classList.remove('show');
+};
+
+['login-input','pass-input'].forEach(id =>
+  document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); })
+);
+
+window.loadGuests = () => {
+  document.getElementById('tbl-body').innerHTML = '<div class="loading-msg">Загрузка…</div>';
+  onValue(ref(db,'guests'), snap => {
+    guests = [];
+    const d = snap.val();
+    if (d) Object.entries(d).forEach(([k,v]) => guests.push({
+      id: k,
+      name:      v.name      || '—',
+      attending: v.attending,
+      dateStr:   v.dateStr   || '—',
+      timestamp: v.timestamp || 0,
+    }));
+    updateStats();
+    render();
+    document.getElementById('last-upd').textContent =
+      'Обновлено в ' + new Date().toLocaleTimeString('ru-RU');
+  }, { onlyOnce: true });
+};
+
+window.setFilter = mode => {
+  filterMode = mode;
+  ['all','yes','no'].forEach(m =>
+    document.getElementById('f-'+m).classList.toggle('active', m===mode)
+  );
+  render();
+};
+
+window.sortBy = field => {
+  if (sortField===field) sortAsc=!sortAsc; else { sortField=field; sortAsc=true; }
+  render();
+};
+
+function updateStats() {
+  const yesGuests = guests.filter(g => g.attending === true);
+  document.getElementById('s-total').textContent = guests.length;
+  document.getElementById('s-yes').textContent   = yesGuests.length;
+  document.getElementById('s-no').textContent    = guests.filter(g => g.attending === false).length;
+  document.getElementById('s-guests').textContent = yesGuests.reduce((sum, g) => sum + (Number(g.guests) || 0), 0);
+}
+
+window.render = () => {
+  const q = document.getElementById('search').value.toLowerCase();
+  let list = guests.filter(g => {
+    if (filterMode==='yes' && !g.attending) return false;
+    if (filterMode==='no'  && g.attending!==false) return false;
+    if (q && !g.name.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  list.sort((a,b) => {
+    let va=a[sortField], vb=b[sortField];
+    if (typeof va==='string') { va=va.toLowerCase(); vb=vb.toLowerCase(); }
+    return sortAsc ? (va<vb?-1:va>vb?1:0) : (va>vb?-1:va<vb?1:0);
+  });
+
+  const wrap = document.getElementById('tbl-body');
+
+  if (!list.length) {
+    wrap.innerHTML = '<div class="empty">Нет записей</div>';
+    return;
+  }
+
+  const arr = f => sortField===f ? (sortAsc?' ↑':' ↓') : '';
+
+  wrap.innerHTML = `<table>
+    <thead><tr>
+      <th class="num-col">#</th>
+      <th onclick="sortBy('name')">Гость${arr('name')}</th>
+      <th onclick="sortBy('attending')">Ответ${arr('attending')}</th>
+      <th onclick="sortBy('guests')">Гостей${arr('guests')}</th>
+      <th onclick="sortBy('timestamp')">Дата и время${arr('timestamp')}</th>
+    </tr></thead>
+    <tbody>
+      ${list.map((g,i)=>`<tr>
+        <td class="num-col">${i+1}</td>
+        <td class="name-col">${esc(g.name)}</td>
+        <td><span class="badge ${g.attending?'badge-yes':'badge-no'}">${g.attending?'Приду':'Не приду'}</span></td>
+        <td>${g.attending? g.guests : 0}</td>
+        <td class="date-col">${esc(g.dateStr)}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+};
+
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
