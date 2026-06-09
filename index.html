@@ -195,6 +195,22 @@ body {
   border-bottom: 1px solid rgba(212, 175, 140, 0.12);
 }
 
+/* ── MUSIC PLAYER ── */
+.music-wrap {
+  margin: 18px 0 6px;
+  text-align: center;
+}
+.music-wrap .info-label {
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.music-wrap audio {
+  width: 100%;
+  max-width: 420px;
+  outline: none;
+  border-radius: 10px;
+}
+
 /* ── RSVP ── */
 .rsvp-label {
   font-size: 11px;
@@ -427,11 +443,11 @@ body {
     <div class="info-row">
       <div class="info-item" data-icon="📅">
         <p class="info-label">Дата</p>
-        <p class="info-value">14 августа<br>2026</p>
+        <p class="info-value">14 августа<br>2026<br>15:30</p>
       </div>
       <div class="info-item" data-icon="📍">
         <p class="info-label">Место</p>
-        <p class="info-value">Банкетный зал<br>«Империал»</p>
+        <p class="info-value">Империал, Банкетный зал на улице 22 Декабря, 92а (2 этаж), Омск</p>
       </div>
     </div>
 
@@ -441,6 +457,14 @@ body {
       Мы будем счастливы видеть вас рядом<br>
       в этот особенный для нас день.
     </p>
+
+    <div class="music-wrap">
+      <p class="info-label">Музыка</p>
+      <audio id="inv-audio" controls preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио.
+      </audio>
+    </div>
 
     <span class="rsvp-label">Подтвердите присутствие</span>
 
