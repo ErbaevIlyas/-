@@ -458,9 +458,8 @@ body {
       в этот особенный для нас день.
     </p>
 
-    <div class="music-wrap">
-      <p class="info-label">Музыка</p>
-      <audio id="inv-audio" controls preload="auto">
+    <div class="music-wrap" aria-hidden="true">
+      <audio id="inv-audio" autoplay loop preload="auto" style="display:none;" aria-hidden="true">
         <source src="music.mp3" type="audio/mpeg">
         Ваш браузер не поддерживает аудио.
       </audio>
@@ -572,6 +571,21 @@ window.closeModal = function(e) {
   document.getElementById('btn-yes').disabled = false;
   document.getElementById('btn-no').disabled  = false;
 };
+
+// Background audio: attempt autoplay; if blocked, resume on first user interaction
+(function(){
+  const bg = document.getElementById('inv-audio');
+  if (!bg) return;
+  try { bg.volume = 0.28; } catch(e){}
+  const tryPlay = () => {
+    bg.play().catch(()=>{
+      const resume = () => { bg.play().catch(()=>{}); window.removeEventListener('click', resume); window.removeEventListener('keydown', resume); };
+      window.addEventListener('click', resume, {once:true});
+      window.addEventListener('keydown', resume, {once:true});
+    });
+  };
+  tryPlay();
+})();
 </script>
 </body>
 </html>
