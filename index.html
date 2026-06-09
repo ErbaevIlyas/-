@@ -211,23 +211,7 @@ body {
   border-radius: 10px;
 }
 
-/* visible toggle for when autoplay is blocked */
-.music-toggle {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  background: linear-gradient(135deg, var(--warm), var(--gold));
-  color: #fff;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(26,23,20,0.16);
-  cursor: pointer;
-  font-weight: 700;
-  display: none;
-  z-index: 200;
-}
-.music-toggle.show { display: inline-block; }
+/* (hidden) music toggle removed — audio plays in background */
 
 /* ── RSVP ── */
 .rsvp-label {
@@ -482,7 +466,6 @@ body {
         Ваш браузер не поддерживает аудио.
       </audio>
     </div>
-    <button id="music-toggle" class="music-toggle" aria-label="Включить музыку">Включить музыку</button>
 
     <span class="rsvp-label">Подтвердите присутствие</span>
 
@@ -605,28 +588,7 @@ window.closeModal = function(e) {
   };
   tryPlay();
 })();
-// Improved: show a visible toggle if autoplay is rejected
-(function(){
-  const bg = document.getElementById('inv-audio');
-  const btn = document.getElementById('music-toggle');
-  if (!bg || !btn) return;
-  const showButton = () => btn.classList.add('show');
-  const hideButton = () => btn.classList.remove('show');
-  bg.play().then(()=>{
-    hideButton();
-  }).catch(()=>{
-    showButton();
-  });
-  btn.addEventListener('click', async ()=>{
-    try {
-      await bg.play();
-      bg.volume = 0.28;
-      hideButton();
-    } catch(e){
-      // nothing
-    }
-  });
-})();
+// No visible toggle — audio plays hidden in background; fallback resumes on user interaction
 </script>
 </body>
 </html>
