@@ -333,7 +333,8 @@ body {
 /* table */
 .tbl-wrap {
   background: var(--white);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 table { width: 100%; border-collapse: collapse; }
@@ -389,6 +390,12 @@ td.name-col {
 td.date-col {
   color: var(--ink2);
   font-size: 12px;
+}
+
+td.phone-col {
+  font-feature-settings: "tnum";
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
 .badge {
@@ -592,6 +599,7 @@ window.loadGuests = () => {
       guests.push({
         id: k,
         name:      v.name      || '—',
+        phone:     (v.phone    || '').toString().trim() || '—',
         attending,
         guests:     Number(v.guests) || (attending ? 1 : 0),
         dateStr:   v.dateStr   || '—',
@@ -639,7 +647,8 @@ window.render = () => {
   let list = guests.filter(g => {
     if (filterMode==='yes' && !g.attending) return false;
     if (filterMode==='no'  && g.attending!==false) return false;
-    if (q && !g.name.toLowerCase().includes(q)) return false;
+    if (q && !(g.name.toLowerCase().includes(q)
+              || String(g.phone || '').toLowerCase().includes(q))) return false;
     return true;
   });
   list.sort((a,b) => {
@@ -661,6 +670,7 @@ window.render = () => {
     <thead><tr>
       <th class="num-col">#</th>
       <th onclick="sortBy('name')">Гость${arr('name')}</th>
+      <th onclick="sortBy('phone')">Телефон${arr('phone')}</th>
       <th onclick="sortBy('attending')">Ответ${arr('attending')}</th>
       <th onclick="sortBy('guests')">Гостей${arr('guests')}</th>
       <th onclick="sortBy('timestamp')">Дата и время${arr('timestamp')}</th>
@@ -670,6 +680,7 @@ window.render = () => {
       ${list.map((g,i)=>`<tr>
         <td class="num-col">${i+1}</td>
         <td class="name-col">${esc(g.name)}</td>
+        <td class="phone-col">${esc(g.phone)}</td>
         <td><span class="badge ${g.attending?'badge-yes':'badge-no'}">${g.attending?'Приду':'Не приду'}</span></td>
         <td>${g.attending? g.guests : 0}</td>
         <td class="date-col">${esc(g.dateStr)}</td>
