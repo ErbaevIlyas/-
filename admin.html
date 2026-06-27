@@ -222,7 +222,7 @@ body {
 /* stats */
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 32px;
 }
@@ -505,10 +505,7 @@ td.phone-col {
         <div class="stat-num" id="s-no">—</div>
         <div class="stat-label">Не придут</div>
       </div>
-      <div class="stat s-all">
-        <div class="stat-num" id="s-guests">—</div>
-        <div class="stat-label">Гостей всего</div>
-      </div>
+
     </div>
 
     <div class="controls">
@@ -599,9 +596,8 @@ window.loadGuests = () => {
       guests.push({
         id: k,
         name:      v.name      || '—',
-        phone:     (v.phone    || '').toString().trim() || '—',
+        phone: (v.phone || '').toString().trim() || '—',
         attending,
-        guests:     Number(v.guests) || (attending ? 1 : 0),
         dateStr:   v.dateStr   || '—',
         timestamp: v.timestamp || 0,
       });
@@ -639,7 +635,7 @@ function updateStats() {
   document.getElementById('s-total').textContent = guests.length;
   document.getElementById('s-yes').textContent   = yesGuests.length;
   document.getElementById('s-no').textContent    = guests.filter(g => g.attending === false).length;
-  document.getElementById('s-guests').textContent = yesGuests.reduce((sum, g) => sum + (Number(g.guests) || 0), 0);
+
 }
 
 window.render = () => {
@@ -670,9 +666,8 @@ window.render = () => {
     <thead><tr>
       <th class="num-col">#</th>
       <th onclick="sortBy('name')">Гость${arr('name')}</th>
-      <th onclick="sortBy('phone')">Телефон${arr('phone')}</th>
       <th onclick="sortBy('attending')">Ответ${arr('attending')}</th>
-      <th onclick="sortBy('guests')">Гостей${arr('guests')}</th>
+      <th onclick="sortBy('phone')">Телефон${arr('phone')}</th>
       <th onclick="sortBy('timestamp')">Дата и время${arr('timestamp')}</th>
       <th>Действия</th>
     </tr></thead>
@@ -680,9 +675,8 @@ window.render = () => {
       ${list.map((g,i)=>`<tr>
         <td class="num-col">${i+1}</td>
         <td class="name-col">${esc(g.name)}</td>
-        <td class="phone-col">${esc(g.phone)}</td>
         <td><span class="badge ${g.attending?'badge-yes':'badge-no'}">${g.attending?'Приду':'Не приду'}</span></td>
-        <td>${g.attending? g.guests : 0}</td>
+        <td class="phone-col">${esc(g.phone || '—')}</td>
         <td class="date-col">${esc(g.dateStr)}</td>
         <td><button class="delete-btn" onclick="deleteGuest('${g.id}')">Удалить</button></td>
       </tr>`).join('')}
