@@ -1995,13 +1995,13 @@ section {
 .cover-bg {
   position: absolute;
   inset: 0;
-  /* Картинку обложки положите в images/cover.jpg. Пока файла нет — красивый фолбэк-градиент */
+  /* Картинку обложки положите в images/cover.jpg. Пока файла нет — кремово-золотой фолбэк */
   background-image: url('images/cover.jpg'),
-    radial-gradient(ellipse at 30% 20%, #c4984a 0%, #8a6a3a 35%, #4a3a2a 70%, #4a3a2a 100%);
+    radial-gradient(ellipse at 30% 20%, #f0dcae 0%, #e8d4a8 35%, #c4984a 70%, #c4984a 100%);
   background-size: cover, cover;
   background-position: center, center;
   background-repeat: no-repeat, no-repeat;
-  filter: brightness(0.92) saturate(1.05);
+  filter: brightness(1.0) saturate(1.05);
   transform: scale(1.08);
   transition: transform 1.4s var(--ease), filter 1.1s ease;
 }
@@ -2031,8 +2031,8 @@ section {
   position: relative;
   z-index: 3;
   text-align: center;
-  padding: 32px 36px;
-  max-width: 580px;
+  padding: 28px 28px;
+  max-width: 560px;
   color: var(--cream);
   animation: coverIn 1.4s var(--ease) 0.4s both;
   user-select: none;
@@ -2050,7 +2050,7 @@ section {
   border-radius: 28px;
   z-index: -1;
   border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 20px 60px rgba(14, 12, 10, 0.20);
+  box-shadow: 0 10px 28px rgba(14, 12, 10, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.10);
 }
 
 .cover-seal {
@@ -2213,7 +2213,11 @@ body.cover-opened .cover {
 /* Mobile: компактнее */
 @media (max-width: 720px) {
   .cover-content { padding: 26px 24px; }
-  .cover-content::before { inset: -6px -8px -6px -8px; border-radius: 22px; }
+  .cover-content::before {
+    inset: -6px -8px -6px -8px;
+    border-radius: 22px;
+    box-shadow: 0 6px 16px rgba(14, 12, 10, 0.08);
+  }
   .cover-seal     { font-size: 50px; margin-bottom: 10px; }
   .cover-eyebrow  { font-size: 10px; letter-spacing: 7px; margin-bottom: 8px; }
   .cover-headline { font-size: clamp(38px, 9vw, 56px); margin-bottom: 16px; }
