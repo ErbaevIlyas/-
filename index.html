@@ -1999,7 +1999,7 @@ section {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at center, transparent 0%, rgba(14,12,10,0.15) 60%, rgba(14,12,10,0.30) 100%);
+    radial-gradient(ellipse 78% 60% at 50% 45%, rgba(14,12,10,0.55) 0%, rgba(14,12,10,0.28) 50%, transparent 80%);
   pointer-events: none;
 }
 
@@ -2031,6 +2031,7 @@ section {
   text-transform: uppercase;
   color: var(--gold-2);
   margin-bottom: 10px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.7), 0 0 32px rgba(0,0,0,0.4);
 }
 
 .cover-headline {
@@ -2057,7 +2058,7 @@ section {
   font-size: clamp(22px, 4vw, 28px);
   color: var(--cream);
   margin-bottom: 8px;
-  text-shadow: 0 4px 18px rgba(0,0,0,0.40);
+  text-shadow: 0 4px 22px rgba(0,0,0,0.65), 0 0 36px rgba(0,0,0,0.4);
   letter-spacing: 1.5px;
 }
 
@@ -2068,6 +2069,7 @@ section {
   letter-spacing: 8px;
   color: var(--gold-2);
   margin-bottom: 36px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.7), 0 0 32px rgba(0,0,0,0.4);
 }
 
 .cover-btn {
@@ -2137,25 +2139,64 @@ body.cover-locked {
 }
 
 body.cover-opened .cover {
-  opacity: 0;
-  transform: translateY(-3%) scale(1.05);
   pointer-events: none;
-  visibility: hidden;
-  transition:
-    opacity 1.1s var(--ease),
-    transform 1.1s var(--ease),
-    visibility 0s linear 1.1s;
-}
-
-body.cover-opened .cover-bg {
-  transform: scale(1.0);
-  filter: brightness(0.85) saturate(1.0);
 }
 
 body.cover-opened .cover-content {
   transform: translateY(-50px);
   opacity: 0;
-  transition: transform 1.1s var(--ease), opacity 0.7s ease;
+  transition: transform 0.9s var(--ease), opacity 0.45s ease;
+}
+
+/* ══ КОНВЕРТ: две половинки разъезжаются при клике ══ */
+.cover-half {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 50%;
+  overflow: hidden;
+  z-index: 2;
+  will-change: transform;
+  transition: transform 1.3s cubic-bezier(0.7, 0, 0.25, 1);
+}
+.cover-half-left  { left: 0; }
+.cover-half-right { right: 0; }
+
+.cover-half-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    url('images/cover.jpg'),
+    radial-gradient(ellipse at 30% 20%, #c4984a 0%, #8a6a3a 35%, #4a3a2a 70%, #4a3a2a 100%);
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
+  filter: brightness(0.92) saturate(1.05);
+}
+.cover-half-left  .cover-half-bg { background-position: left center,  left center; }
+.cover-half-right .cover-half-bg { background-position: right center, right center; }
+
+/* Тень-«шарнир» на стыке половинок (мягкая визуальная складка) */
+.cover-half::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 38px;
+  pointer-events: none;
+  z-index: 1;
+}
+.cover-half-left::after  {
+  right: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(14,12,10,0.55) 100%);
+}
+.cover-half-right::after {
+  left: 0;
+  background: linear-gradient(270deg, transparent 0%, rgba(14,12,10,0.55) 100%);
+}
+
+body.cover-opened .cover-half-left  {
+  transform: translateX(-115%) rotate(-8deg);
+}
+body.cover-opened .cover-half-right {
+  transform: translateX(115%)  rotate(8deg);
 }
 
 /* Reduced motion: упрощаем анимации */
@@ -2523,7 +2564,9 @@ body.cover-opened .cover-content {
 
 <!-- ═══════ COVER / ОТКРЫТКА-ОБЛОЖКА ═══════ -->
 <div id="cover" class="cover" role="dialog" aria-modal="true" aria-labelledby="cover-headline-id">
-  <div class="cover-bg" aria-hidden="true"></div>
+  <!-- Две половинки «конверта» — раскрываются при клике -->
+  <div class="cover-half cover-half-left"><div class="cover-half-bg" aria-hidden="true"></div></div>
+  <div class="cover-half cover-half-right"><div class="cover-half-bg" aria-hidden="true"></div></div>
   <div class="cover-grain" aria-hidden="true"></div>
   <div class="cover-vignette" aria-hidden="true"></div>
   <div class="cover-content">
