@@ -179,49 +179,24 @@ section {
 .hero-bg-orn svg:nth-child(1) { top: 8%; left: -60px; }
 .hero-bg-orn svg:nth-child(2) { bottom: 12%; right: -60px; transform: scaleX(-1); }
 
-/* ── Подписи под портретами (появляются после анимации кругов) ── */
+/* ── Подписи под портретами (больше не используются в HTML, имена вынесены ниже) ── */
 .portrait-fig {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
-}
-.portrait-caption {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  text-align: center;
-  opacity: 0;
-  animation: fadeDown 1s var(--ease) 1.2s forwards;
-}
-.portrait-caption + .portrait-caption { animation-delay: 1.45s; }
-.portrait-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  font-weight: 500;
-  color: var(--ink);
-  letter-spacing: 1px;
-  line-height: 1.1;
-}
-.portrait-role {
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-top: 4px;
 }
 
+/* ── Большая надпись «Приглашение на свадьбу» (под именами, как подзаголовок) ── */
 .hero-eyebrow {
   font-family: 'Great Vibes', cursive;
-  font-size: 44px;
+  font-size: clamp(34px, 6vw, 52px);
   color: var(--gold);
-  margin-bottom: 18px;
+  margin-top: 4px;
+  margin-bottom: 10px;
   opacity: 0;
-  animation: fadeDown 1.4s var(--ease) 0.2s forwards;
+  animation: fadeDown 1.4s var(--ease) 0.75s forwards;
   text-shadow: 0 4px 18px rgba(196,152,74,0.20);
+  line-height: 1.1;
 }
 
 .portraits {
@@ -229,7 +204,7 @@ section {
   align-items: center;
   justify-content: center;
   gap: 28px;
-  margin: 24px auto 40px;
+  margin: 50px auto 44px;
 }
 
 .portrait-wrap {
@@ -238,8 +213,9 @@ section {
   height: 210px;
   opacity: 0;
 }
-.portrait-wrap.left  { animation: portraitLeft  1.2s var(--ease) 0.5s forwards; }
-.portrait-wrap.right { animation: portraitRight 1.2s var(--ease) 0.5s forwards; }
+/* Фотки появляются с задержкой 1.3s, чтобы имена, подзаголовок и инскрипшн успели проявиться */
+.portrait-wrap.left  { animation: portraitLeft  1.2s var(--ease) 1.3s forwards; }
+.portrait-wrap.right { animation: portraitRight 1.2s var(--ease) 1.3s forwards; }
 
 @keyframes portraitLeft {
   from { opacity: 0; transform: translateX(-40px) rotate(-8deg) scale(0.85); }
@@ -303,7 +279,7 @@ section {
   color: var(--gold);
   line-height: 1;
   opacity: 0;
-  animation: fadeScale 1.2s var(--ease) 1.2s forwards;
+  animation: fadeScale 1.2s var(--ease) 1.5s forwards;
   position: relative;
   z-index: 3;
   /* Смещение вверх через margin-top, не transform: иначе fadeScale keyframe
@@ -322,34 +298,55 @@ section {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.hero-title {
-  margin: 14px 0 18px;
+/* ── Имена «Ринат и Дарина» в самом верху hero (главная надпись) ── */
+.hero-couple-names {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(14px, 3vw, 26px);
+  margin: 30px 0 8px;
   opacity: 0;
-  animation: revealUp 1.2s var(--ease) 1.5s forwards;
+  animation: fadeDown 1.4s var(--ease) 0.2s forwards;
+  flex-wrap: nowrap;
 }
-
-.hero-title .line {
-  display: block;
+.hero-couple-names .name {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 500;
-  font-size: clamp(46px, 11vw, 96px);
+  font-size: clamp(40px, 9vw, 80px);
   color: var(--ink);
   letter-spacing: 1px;
   line-height: 1;
   text-shadow: 0 6px 30px rgba(196,152,74,0.18);
+  white-space: nowrap;
 }
-.hero-title .line--conj {
-  font-style: italic;
-  font-size: 0.55em;
-  color: var(--gold);
+.hero-couple-names .conj {
+  font-family: 'Great Vibes', cursive;
+  font-style: normal;
   font-weight: 400;
+  font-size: clamp(40px, 7.5vw, 64px);
+  color: var(--gold);
+  line-height: 1;
+  text-shadow: 0 4px 18px rgba(196,152,74,0.30);
+}
+
+.hero-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(17px, 2.6vw, 24px);
+  font-weight: 400;
+  color: var(--ink-3);
+  letter-spacing: 3px;
+  margin-top: 6px;
+  margin-bottom: 26px;
+  opacity: 0;
+  animation: revealUp 1s var(--ease) 1.0s forwards;
 }
 
 .hero-date {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  margin-top: 18px;
+  margin-top: 14px;
   padding: 14px 28px;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -362,7 +359,7 @@ section {
   color: var(--ink-2);
   letter-spacing: 3px;
   opacity: 0;
-  animation: revealUp 1s var(--ease) 1.9s forwards;
+  animation: revealUp 1s var(--ease) 2.2s forwards;
 }
 
 .hero-date .d {
@@ -443,6 +440,14 @@ section {
   opacity: 1;
 }
 
+/* Скрываем панель автопрокрутки, когда активна последняя секция (RSVP),
+   чтобы она не перекрывала ссылку "Панель администратора" */
+.auto-scroll-bar.hide {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(20px);
+}
+
 .as-btn {
   width: 40px;
   height: 40px;
@@ -498,40 +503,62 @@ section {
   opacity: 0.6;
 }
 
+/* ── На мобильных панель автопрокрутки уезжает в НИЖНИЙ ЛЕВЫЙ УГОЛ,
+   чтобы центр внизу оставался свободным для ссылки «Панель администратора»
+   и не пересекался с кнопкой музыки справа. Дизайн облегчённый: маленькая
+   полусферическая пилюля с мягкой тенью. ── */
 @media (max-width: 720px) {
   .auto-scroll-bar {
-    bottom: 80px;
-    padding: 6px 12px;
-    gap: 6px;
+    bottom: 16px;
+    left: 16px;
+    right: auto;
+    transform: none;
+    padding: 5px 10px 5px 5px;
+    gap: 5px;
+    background: rgba(255,255,255,0.78);
+    box-shadow: 0 6px 18px rgba(14,12,10,0.10);
+  }
+  .auto-scroll-bar.show {
+    transform: none;
+  }
+  .auto-scroll-bar.hide {
+    transform: translateX(-12px) translateY(10px);
   }
   .as-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 13px;
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
   }
   .as-dot {
     width: 6px;
     height: 6px;
   }
-
+  /* На мобильных — уменьшенное количество точек для компактности */
+  .as-dots {
+    gap: 4px;
+    padding: 0 2px;
+  }
 }
 
 @media (max-width: 380px) {
   .auto-scroll-bar {
-    bottom: 72px;
-    padding: 4px 10px;
+    bottom: 14px;
+    left: 14px;
+    padding: 4px 8px 4px 4px;
     gap: 4px;
   }
   .as-btn {
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     font-size: 11px;
   }
   .as-dot {
     width: 5px;
     height: 5px;
   }
-
+  .as-dots {
+    gap: 3px;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2029,20 +2056,19 @@ section {
   /* Лепестки: режем половину для производительности */
   .petal:nth-child(n+9) { display: none; }
 
-  /* ═══ HERO ═══ */
-  .portraits { gap: 16px; margin: 22px auto 34px; }
+  /* ═══ HERO — порядок: имена → инскрипшн → подзаголовок → фотки → дата ═══ */
+  .portraits { gap: 16px; margin: 32px auto 30px; }
   .portrait-wrap { width: 140px; height: 140px; }
-  /* Амперсанд визуально по центру кругов (а не fig-row 220px) */
+  /* Амперсанд визуально по центру кругов */
   .amp-couple { font-size: 60px; margin-top: -20px; }
-  .portrait-fig { gap: 14px; max-width: 160px; }
-  .portrait-name { font-size: 21px; }
-  .portrait-role { font-size: 9.5px; letter-spacing: 3px; margin-top: 3px; }
+  .portrait-fig { max-width: 160px; }
 
-  .hero-eyebrow { font-size: 32px; margin-bottom: 14px; }
-  .hero-title { margin: 14px 0 18px; }
-  .hero-title .line { font-size: clamp(34px, 11vw, 56px); }
-  .hero-title .line--conj { font-size: 0.7em; }
-  .hero-date { padding: 11px 20px; font-size: 18px; gap: 12px; letter-spacing: 2px; }
+  .hero-couple-names { gap: clamp(10px, 3vw, 18px); margin: 18px 0 6px; }
+  .hero-couple-names .name { font-size: clamp(34px, 11vw, 56px); }
+  .hero-couple-names .conj { font-size: clamp(34px, 9vw, 52px); }
+  .hero-eyebrow { font-size: clamp(28px, 8vw, 38px); margin-top: 2px; margin-bottom: 10px; }
+  .hero-sub { font-size: clamp(15px, 4.5vw, 20px); margin-bottom: 24px; }
+  .hero-date { padding: 11px 20px; font-size: 18px; gap: 12px; letter-spacing: 2px; margin-top: 6px; }
 
   .scroll-cue { display: none; }
 
@@ -2144,17 +2170,15 @@ section {
   .final { padding: 52px 14px 70px; }
 
   .portraits { gap: 10px; margin: 16px auto 26px; }
-  .portrait-wrap { width: 110px; height: 110px; }
+  .portrait-wrap { width: 110px; height: 110px; }  .amp-couple { font-size: 50px; margin-top: -16px; }
+  .portrait-fig { max-width: 130px; }
 
-  .amp-couple { font-size: 50px; margin-top: -16px; }
-  .portrait-fig { max-width: 130px; gap: 12px; }
-  .portrait-name { font-size: 18px; }
-  .portrait-role { font-size: 8.5px; letter-spacing: 2.5px; }
-
-  .hero-eyebrow { font-size: 26px; }
-  .hero-title .line { font-size: 36px; }
-  .hero-title .line--conj { font-size: 0.75em; }
-  .hero-date { font-size: 16px; padding: 9px 16px; letter-spacing: 1.5px; }
+  .hero-couple-names { gap: 10px; margin: 14px 0 4px; }
+  .hero-couple-names .name { font-size: clamp(28px, 10vw, 40px); }
+  .hero-couple-names .conj { font-size: clamp(28px, 8vw, 38px); }
+  .hero-eyebrow { font-size: clamp(22px, 8vw, 30px); margin-bottom: 8px; }
+  .hero-sub { font-size: 14px; margin-bottom: 18px; letter-spacing: 2px; }
+  .hero-date { font-size: 16px; padding: 9px 16px; letter-spacing: 1.5px; margin-top: 4px; }
 
   .glass { width: 64px; height: 144px; }
   .champagne-frame { height: 210px; }
@@ -2238,7 +2262,15 @@ section {
     </div>
 
     <div class="section-inner">
-      <div class="hero-eyebrow">Дорогие гости!</div>
+      <div class="hero-couple-names">
+        <span class="name">Ринат</span>
+        <span class="conj">&amp;</span>
+        <span class="name">Дарина</span>
+      </div>
+
+      <div class="hero-eyebrow">Приглашение на&nbsp;свадьбу</div>
+
+      <div class="hero-sub">14&nbsp;августа&nbsp;·&nbsp;2026</div>
 
       <div class="portraits">
         <div class="portrait-fig">
@@ -2261,10 +2293,6 @@ section {
               <circle cx="50" cy="74" r="1.5" fill="#9a7a3e"/>
             </svg>
           </div>
-          </div>
-          <div class="portrait-caption">
-            <span class="portrait-name">Ринат</span>
-            <span class="portrait-role">Жених</span>
           </div>
         </div>
 
@@ -2296,17 +2324,7 @@ section {
             </svg>
           </div>
           </div>
-          <div class="portrait-caption">
-            <span class="portrait-name">Дарина</span>
-            <span class="portrait-role">Невеста</span>
-          </div>
         </div>
-      </div>
-
-      <div class="hero-title">
-        <span class="line">Ринат</span>
-        <span class="line line--conj">и</span>
-        <span class="line">Дарина</span>
       </div>
 
       <div class="hero-date">
@@ -2860,11 +2878,19 @@ window.closeModal = function(e) {
     });
   }
 
+  // Прячем панель автопрокрутки на последней секции (RSVP), чтобы она не перекрывала «Панель администратора»
+  function updateBarVisibility() {
+    const lastIndex = sections.length - 1;
+    bar.classList.toggle('hide', activeIndex === lastIndex);
+    if (activeIndex === lastIndex && isPlaying) stopAutoScroll();
+  }
+
   function scrollToSection(index) {
     if (index < 0 || index >= sections.length) return;
     activeIndex = index;
     sections[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
     updateDots();
+    updateBarVisibility();
   }
 
   function nextSection() {
@@ -2915,6 +2941,7 @@ window.closeModal = function(e) {
       if (closest !== activeIndex) {
         activeIndex = closest;
         updateDots();
+        updateBarVisibility();
         if (isPlaying) stopAutoScroll();
       }
     }, 150);
