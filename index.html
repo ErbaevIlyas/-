@@ -30,6 +30,8 @@
 <link rel="preload" href="images/groom.webp" as="image" type="image/webp" fetchpriority="high">
 <link rel="preload" href="images/bride.webp" as="image" type="image/webp" fetchpriority="auto">
 <link rel="preload" href="images/cover.jpg" as="image" fetchpriority="auto">
+<link rel="preload" href="video/cover.mp4" as="video" type="video/mp4" fetchpriority="high">
+<link rel="preload" href="video/background.mp4" as="video" type="video/mp4" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════════
@@ -893,7 +895,6 @@ section {
 .tl-item:nth-child(2) .dot { animation-delay: 0.3s; }
 .tl-item:nth-child(3) .dot { animation-delay: 0.6s; }
 .tl-item:nth-child(4) .dot { animation-delay: 0.9s; }
-.tl-item:nth-child(5) .dot { animation-delay: 1.2s; }
 
 @keyframes dotPulse {
   0%, 100% { box-shadow: 0 0 0 4px rgba(212,167,106,0.10); transform: scale(1); }
@@ -2524,7 +2525,7 @@ body.cover-opened .cover {
 <body>
 
 <!-- ═══════ VIDEO BACKGROUND ═══════ -->
-<video id="bg-video" autoplay muted loop playsinline poster="images/cover.jpg">
+<video id="bg-video" autoplay muted loop playsinline preload="auto" poster="images/cover.jpg">
   <source src="video/background.mp4" type="video/mp4">
 </video>
 <div class="video-overlay" aria-hidden="true"></div>
@@ -2532,7 +2533,7 @@ body.cover-opened .cover {
 <!-- ═══════ COVER / ОТКРЫТКА-ОБЛОЖКА ═══════ -->
 <div id="cover" class="cover" role="dialog" aria-modal="true" aria-labelledby="cover-headline-id">
   <!-- Cover video — отдельное видео для обложки -->
-  <video class="cover-video" autoplay muted loop playsinline aria-hidden="true">
+  <video class="cover-video" autoplay muted loop playsinline preload="auto" poster="images/cover.jpg" aria-hidden="true">
     <source src="video/cover.mp4" type="video/mp4">
   </video>
   <div class="cover-bg" aria-hidden="true"></div>
@@ -2753,29 +2754,24 @@ body.cover-opened .cover {
       </div>
 
       <div class="timeline">          <div class="tl-item reveal-up" data-d="1">
-            <div class="event">Сбор гостей · фуршет</div>
+            <div class="event">Торжественный банкет</div>
             <div class="dot"></div>
             <div class="time">15:30</div>
           </div>
           <div class="tl-item reveal-up" data-d="2">
-            <div class="event">Свадебная церемония (беташар)</div>
+            <div class="event">Беташар</div>
             <div class="dot"></div>
-            <div class="time">16:00</div>
+            <div class="time">15:40</div>
           </div>
           <div class="tl-item reveal-up" data-d="3">
-            <div class="event">Торжественный банкет</div>
-            <div class="dot"></div>
-            <div class="time">16:20</div>
-          </div>
-          <div class="tl-item reveal-up" data-d="4">
             <div class="event">Первый танец молодых</div>
             <div class="dot"></div>
-            <div class="time">19:00</div>
+            <div class="time">18:00</div>
           </div>
-          <div class="tl-item reveal-up" data-d="5">
+          <div class="tl-item reveal-up" data-d="4">
             <div class="event">Свадебный торт</div>
             <div class="dot"></div>
-            <div class="time">21:00</div>
+            <div class="time">20:30</div>
           </div>
       </div>
     </div>
