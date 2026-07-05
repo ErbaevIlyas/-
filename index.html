@@ -1875,15 +1875,18 @@ section {
   object-fit: cover;
   z-index: 0;
   pointer-events: none;
-  background: #000;
+  background: #fdfaf3;
+  /* На светлой обложке видео-фон не нужен — выключаем, чтобы не было
+     вспышек и тяжёлого mp4 не загружался */
+  display: none;
 }
 
 .cover-bg {
   position: absolute;
   inset: 0;
-  /* Тёмный элегантный фон-фолбэк — позади видео, виден пока оно грузится */
+  /* Светлый кремовый фон — обложка в гармонии со светлой палитрой всего сайта */
   background:
-    radial-gradient(ellipse at 30% 20%, #1a1a1a 0%, #0d0d0d 45%, #050505 100%);
+    radial-gradient(ellipse at 30% 20%, #fdfaf3 0%, #f4ebd6 50%, #e6d6b6 100%);
   background-size: cover;
   background-position: center;
   z-index: -1;
@@ -1895,22 +1898,18 @@ section {
   position: absolute;
   inset: 0;
   z-index: 2;
-  opacity: 0.18;
-  mix-blend-mode: overlay;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(212,175,125,0.10) 0, transparent 1px),
-    radial-gradient(circle at 60% 70%, rgba(212,175,125,0.08) 0, transparent 1px),
-    radial-gradient(circle at 80% 20%, rgba(212,175,125,0.12) 0, transparent 1px);
-  background-size: 5px 5px, 9px 9px, 11px 11px;
-  pointer-events: none;
+  /* Зернистость overlay на светлом фоне выглядит грязно — убираем */
+  display: none;
 }
 
 .cover-vignette {
   position: absolute;
   inset: 0;
   z-index: 2;
+  /* На светлом — вместо затемнения углов лёгкое тёплое свечение по краям,
+     чтобы виньетка работала в обе стороны (обрамляет стекло под текстом) */
   background:
-    radial-gradient(ellipse 110% 90% at 50% 50%, transparent 55%, rgba(14,12,10,0.30) 90%, rgba(14,12,10,0.45) 100%);
+    radial-gradient(ellipse 120% 95% at 50% 50%, transparent 60%, rgba(232,214,178,0.45) 92%, rgba(212,167,106,0.55) 100%);
   pointer-events: none;
 }
 
@@ -1925,19 +1924,20 @@ section {
   user-select: none;
 }
 
-/* Стеклянная «подложка» под текстом — полупрозрачная с размытием,
-   чтобы текст читался на видео-фоне */
+/* Стеклянная «подложка» под текстом — полупрозрачная с размытием на светлом фоне */
 .cover-content::before {
   content: '';
   position: absolute;
   inset: -12px -16px -12px -16px;
-  background: rgba(14, 12, 10, 0.55);
+  background: rgba(255, 250, 240, 0.62);
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
   border-radius: 32px;
   z-index: -1;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.30);
+  border: 1px solid rgba(212, 175, 125, 0.35);
+  box-shadow:
+    0 20px 60px rgba(120, 95, 60, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 /* Radial warm-light sweep expanding from center on open */
@@ -2009,7 +2009,8 @@ body.cover-opened .cover-burst .cb {
   color: var(--gold-2);
   line-height: 1;
   margin-bottom: 14px;
-  text-shadow: 0 6px 24px rgba(212,167,106,0.55);
+  /* Лёгкое тёплое свечение золота вместо тяжёлой тёмной тени */
+  text-shadow: 0 4px 18px rgba(212,167,106,0.40);
 }
 
 .cover-eyebrow {
@@ -2020,7 +2021,7 @@ body.cover-opened .cover-burst .cb {
   text-transform: uppercase;
   color: var(--gold-2);
   margin-bottom: 10px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.7), 0 0 32px rgba(0,0,0,0.4);
+  text-shadow: 0 1px 1px rgba(255, 250, 240, 0.55);
 }
 
 .cover-headline {
@@ -2029,8 +2030,9 @@ body.cover-opened .cover-burst .cb {
   font-size: clamp(48px, 8.5vw, 78px);
   line-height: 1.05;
   letter-spacing: 1.5px;
-  color: #ffffff;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.50), 0 2px 8px rgba(0, 0, 0, 0.30);
+  color: var(--ink);
+  /* Тонкое «гало» кремового оттенка вокруг букв для контраста на стекле */
+  text-shadow: 0 1px 1px rgba(255, 250, 240, 0.6);
   margin-bottom: 22px;
 }
 
@@ -2045,9 +2047,9 @@ body.cover-opened .cover-burst .cb {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
   font-size: clamp(22px, 4vw, 28px);
-  color: #ffffff;
+  color: var(--ink-2);
   margin-bottom: 8px;
-  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.50), 0 1px 6px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 1px 1px rgba(255, 250, 240, 0.6);
   letter-spacing: 1.5px;
 }
 
@@ -2058,7 +2060,7 @@ body.cover-opened .cover-burst .cb {
   letter-spacing: 8px;
   color: var(--gold-2);
   margin-bottom: 36px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.7), 0 0 32px rgba(0,0,0,0.4);
+  text-shadow: 0 1px 1px rgba(255, 250, 240, 0.55);
 }
 
 .cover-btn {
@@ -2066,12 +2068,12 @@ body.cover-opened .cover-burst .cb {
   align-items: center;
   gap: 14px;
   padding: 15px 34px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 250, 240, 0.45);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(212,175,125,0.45);
+  border: 1px solid rgba(212,175,125,0.55);
   border-radius: 999px;
-  color: #ffffff;
+  color: var(--ink-2);
   font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 500;
@@ -2089,10 +2091,10 @@ body.cover-opened .cover-burst .cb {
 
 .cover-btn:hover,
 .cover-btn:focus-visible {
-  background: rgba(255,255,255,0.16);
+  background: rgba(255, 255, 255, 0.70);
   transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(0,0,0,0.32);
-  border-color: rgba(212,175,125,0.75);
+  box-shadow: 0 16px 36px rgba(120, 95, 60, 0.18);
+  border-color: rgba(180, 130, 75, 0.85);
   outline: none;
 }
 
@@ -2170,7 +2172,7 @@ body.cover-opened .cover {
   .cover-content::before {
     inset: -6px -8px -6px -8px;
     border-radius: 24px;
-    box-shadow: 0 6px 16px rgba(14, 12, 10, 0.08);
+    box-shadow: 0 6px 16px rgba(120, 95, 60, 0.10);
   }
   .cover-seal     { font-size: 50px; margin-bottom: 12px; }
   .cover-eyebrow  { font-size: 10px; letter-spacing: 7px; margin-bottom: 10px; }
