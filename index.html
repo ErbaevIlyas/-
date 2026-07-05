@@ -30,7 +30,9 @@
 <link rel="preload" href="images/groom.webp" as="image" type="image/webp" fetchpriority="high">
 <link rel="preload" href="images/bride.webp" as="image" type="image/webp" fetchpriority="auto">
 <link rel="preload" href="images/cover.jpg" as="image" fetchpriority="auto">
-<link rel="preload" href="video/cover.mp4" as="video" type="video/mp4" fetchpriority="high">
+<!-- Прежде здесь предзагружалось video/cover.mp4 для обложки.
+     На кремовом покрытии видео больше не показывается — preload снят,
+     чтобы не тянуть лишний mp4. -->
 <link rel="preload" href="video/background.mp4" as="video" type="video/mp4" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
@@ -59,7 +61,13 @@ html { font-size: 16px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%;
 
 body {
   font-family: 'Inter', sans-serif;
-  background: #111;
+  /* Базовый фон — почти-белый тёплый градиент. До прихода bg-video
+     пользователь видит светлый тон — НЕ коричневый. Раньше #fbf7ec → #f3e9d4
+     в комбинации с тёмным .video-overlay превращались в «коричневый»
+     (на дисплеях с тёплой калибровкой особенно). Сейчас .video-overlay
+     тоже прячется до открытия обложки, так что двойной защиты нет —
+     оставляем светлый, но без жёлтого. */
+  background: linear-gradient(180deg, #fcfaf3 0%, #f7efe0 100%) fixed;
   color: var(--ink);
   min-height: 100vh;
   overflow-x: hidden;
@@ -106,6 +114,18 @@ button { font-family: inherit; cursor: pointer; }
   object-fit: cover;
   z-index: 0;
   pointer-events: none;
+  /* Видео прячется, пока обложка на экране: иначе его тёмный первый кадр
+     «мигает» коричневой/чёрной вспышкой сразу после клика «открыть»
+     (раньше на 0.2-0.5с показывался frame №0 видео). Плавная
+     fade-in появляется с задержкой 0.35с после открытия — за это время
+     видео успевает буферизоваться, и пользователь видит уже плавный
+     сюжет, а не первый кадр. Управляется классом body.cover-opened,
+     который уже добавляется из openCover(). */
+  opacity: 0;
+  transition: opacity 0.6s ease 0.35s;
+}
+body.cover-opened #bg-video {
+  opacity: 1;
 }
 
 .video-overlay {
@@ -114,6 +134,14 @@ button { font-family: inherit; cursor: pointer; }
   z-index: 1;
   background: rgba(0, 0, 0, 0.18);
   pointer-events: none;
+  /* Тёмная плёнка прячется вместе с видео до открытия обложки — иначе
+     она тонирует body-bg в коричневый ПРЯМО ПОД обложкой. После клика
+     «открыть» плавно появляется в один такт с видео. */
+  opacity: 0;
+  transition: opacity 0.6s ease 0.35s;
+}
+body.cover-opened .video-overlay {
+  opacity: 1;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1353,9 +1381,14 @@ section {
   padding: 60px 24px;
 }
 
-/* ── Glass-card поверх кастомного фона ── */
+/* ── Glass-card: плотно-белая подложка с чёрным текстом ──
+   Раньше rgba(255,255,255,0.38) сквозил тёмный фон секции (.bg-video затемнённый
+   .video-overlay rgba(0,0,0,0.18)) и карточка казалась «тёмно-серой» с еле
+   читаемым текстом. Подняли до 0.94 — баланс между «листом бумаги» и
+   лёгким стеклом, фон всё ещё чуть проступает по краям но не убивает контраст.
+   Текст цитаты — явно чёрный (#000), а не тёплый var(--ink-2). */
 .bg-card {
-  background: rgba(255,255,255,0.38);
+  background: rgba(255,255,255,0.94);
   backdrop-filter: blur(20px) saturate(1.1);
   -webkit-backdrop-filter: blur(20px) saturate(1.1);
   border: 1px solid rgba(255,255,255,0.20);
@@ -1388,8 +1421,8 @@ section {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
   font-size: clamp(20px, 3.4vw, 28px);
-  font-weight: 400;
-  color: var(--ink-2);
+  font-weight: 500;
+  color: #000;
   line-height: 1.5;
   margin-top: 16px;
   margin-bottom: 14px;
@@ -1867,26 +1900,48 @@ section {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Видео-фон обложки: возвращён по запросу пользователя.
+   Защита от «коричневой» вспышки:
+   1) НЕТ атрибута poster (раньше cover.jpg давал коричневый первый кадр).
+   2) preload="metadata" — не тянет лишние кадры впустую.
+   3) opacity:0 → fade-in с задержкой 0.35с — браузер успевает буферизовать
+      первый кадр ДО того, как он покажется. Пользователь сначала видит
+      чистый .cover-bg (белый) и контент — без затемнения.
+   4) z-index:1 — поверх .cover-bg (z:-1, фолбэк), под .cover-content (z:3)
+      и .cover-sweep/.cover-burst (z:4/2). */
 .cover-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
-  background: #fdfaf3;
-  /* На светлой обложке видео-фон не нужен — выключаем, чтобы не было
-     вспышек и тяжёлого mp4 не загружался */
-  display: none;
+  background: transparent;
+  opacity: 0;
+  animation: coverVideoIn 0.7s ease 0.35s forwards;
+  /* Свадебные видео обычно стартуют с тёмного/затемнённого кадра.
+     brightness(1.08) — слегка осветляет тёмные старты (защита от
+     «коричневой» вспышки на медленной сети, когда buffer не успел).
+     saturate(0.92) — приглушает слишком насыщенные тёплые тона, чтобы
+     видео не выглядело «кислотным» рядом с кремовой палитрой сайта. */
+  filter: brightness(1.08) saturate(0.92);
+}
+
+@keyframes coverVideoIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .cover-bg {
   position: absolute;
   inset: 0;
-  /* Светлый кремовый фон — обложка в гармонии со светлой палитрой всего сайта */
+  /* Светлый фон обложки: чисто белый в центре плавно переходит в почти
+     белый у краёв. Никаких #f5ebd6 / #e6d6b6 — на тёмных мониторах или в
+     браузерах с «тёплой» калибровкой эти оттенки раньше превращались
+     в коричневый, особенно при включённом оверлее. */
   background:
-    radial-gradient(ellipse at 30% 20%, #fdfaf3 0%, #f4ebd6 50%, #e6d6b6 100%);
+    radial-gradient(ellipse at 30% 20%, #ffffff 0%, #fefcf6 60%, #fbf5e8 100%);
   background-size: cover;
   background-position: center;
   z-index: -1;
@@ -1906,11 +1961,9 @@ section {
   position: absolute;
   inset: 0;
   z-index: 2;
-  /* На светлом — вместо затемнения углов лёгкое тёплое свечение по краям,
-     чтобы виньетка работала в обе стороны (обрамляет стекло под текстом) */
-  background:
-    radial-gradient(ellipse 120% 95% at 50% 50%, transparent 60%, rgba(232,214,178,0.45) 92%, rgba(212,167,106,0.55) 100%);
-  pointer-events: none;
+  /* Виньетка добавляла коричневатый налёт по углам — на чисто-белой
+     обложке такого делать нельзя. Отключаем. */
+  display: none;
 }
 
 .cover-content {
@@ -1924,19 +1977,27 @@ section {
   user-select: none;
 }
 
-/* Стеклянная «подложка» под текстом — полупрозрачная с размытием на светлом фоне */
+/* Подложка под текстом обложки — почти непрозрачный белый, чтобы
+   чёрный текст читался чётко на любом фоне. Раньше rgba(255,250,240,0.62)
+   был полупрозрачный с кремовым оттенком — на дисплеях с тёплой
+   калибровкой буквы выглядели «через жёлтое стекло». Сейчас чисто белый
+   с opacity 0.94 — баланс: подложка читается как белый лист, но
+   сохраняется мягкое «стекло» (blur+saturate) при первом появлении. */
 .cover-content::before {
   content: '';
   position: absolute;
   inset: -12px -16px -12px -16px;
-  background: rgba(255, 250, 240, 0.62);
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
   border-radius: 32px;
   z-index: -1;
-  border: 1px solid rgba(212, 175, 125, 0.35);
+  border: 1px solid rgba(212, 175, 125, 0.40);
+  /* Тень нейтрально-серая (раньше была коричневая rgba(120,95,60,0.14) —
+     на плотной белой подложке коричневатое сияние по периметру читалось
+     как «грязная рамка», что возвращало коричневый акцент. ) */
   box-shadow:
-    0 20px 60px rgba(120, 95, 60, 0.18),
+    0 24px 70px rgba(0, 0, 0, 0.10),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
@@ -2029,13 +2090,16 @@ body.cover-opened .cover-burst .cb {
 
 .cover-headline {
   font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(48px, 8.5vw, 78px);
   line-height: 1.05;
   letter-spacing: 1.5px;
-  color: var(--ink);
-  /* Тонкое «гало» кремового оттенка вокруг букв для контраста на стекле */
-  text-shadow: 0 1px 1px rgba(255, 250, 240, 0.6);
+  color: #000;
+  /* Чисто белый «гало» вокруг букв — на почти-белой подложке визуально
+     собирает контур буквы, делает её чуть плотнее и читаемее.
+     Раньше был кремовый (255,250,240) — на новой плотной подложке
+     он сливался и не работал. */
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.65);
   margin-bottom: 22px;
 }
 
@@ -2167,6 +2231,18 @@ body.cover-opened .cover {
   body.cover-opened .cover-bg { transition: none; }
   body.cover-opened .cover-content { transition: none; }
   body.cover-opened .cover-video { transition: none; }
+
+  /* Новые opacity-transitions для видео и тёмной плёнки — отключаем полностью:
+     чуткие к движению пользователи не должны ждать 0.6s, пока видео «проявится»,
+     сразу видят контент. */
+  #bg-video, .video-overlay { transition: none; }
+  body.cover-opened #bg-video { opacity: 1 !important; }
+  body.cover-opened .video-overlay { opacity: 1 !important; }
+
+  /* Видео обложки — убираем animation (0.7s) и поднимаем opacity до 1
+     сразу, иначе чуткие к движению пользователи 0.35+0.7=1.05с ждут
+     появления обложечного видео. */
+  .cover-video { animation: none; opacity: 1 !important; }
   }
 
 /* Mobile: компактнее */
@@ -2531,18 +2607,26 @@ body.cover-opened .cover {
 <body>
 
 <!-- ═══════ VIDEO BACKGROUND ═══════ -->
-<video id="bg-video" autoplay muted loop playsinline preload="auto" poster="images/cover.jpg">
+<!-- preload="metadata" — намеренно НЕ auto: пусть браузер не тянет все кадры
+     до клика «открыть». Иначе первый тёмный кадр видео может «мигнуть» в момент
+     открытия на медленном соединении. autoplay+muted всё равно стартуют плавно
+     (Chromium/Firefox/Safari стартуют playback сразу по факту достаточного буфера
+     для metadata+один кадр), но без полной предзагрузки. Для надёжности в
+     openCover() дополнительно дёргается bg-video.load() + play(). -->
+<video id="bg-video" autoplay muted loop playsinline preload="metadata">
   <source src="video/background.mp4" type="video/mp4">
 </video>
 <div class="video-overlay" aria-hidden="true"></div>
 
 <!-- ═══════ COVER / ОТКРЫТКА-ОБЛОЖКА ═══════ -->
 <div id="cover" class="cover" role="dialog" aria-modal="true" aria-labelledby="cover-headline-id">
-  <!-- Cover video — отдельное видео для обложки -->
-  <video class="cover-video" autoplay muted loop playsinline preload="auto" poster="images/cover.jpg" aria-hidden="true">
+  <div class="cover-bg" aria-hidden="true"></div>
+  <!-- Видео-фон обложки. Возвращён по запросу пользователя.
+       Без poster (раньше давал коричневую вспышку), с preload="metadata"
+       (не тянет лишнее) и animation fade-in в .cover-video CSS. -->
+  <video class="cover-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
     <source src="video/cover.mp4" type="video/mp4">
   </video>
-  <div class="cover-bg" aria-hidden="true"></div>
   <div class="cover-grain" aria-hidden="true"></div>
   <div class="cover-vignette" aria-hidden="true"></div>
   <div class="cover-sweep" aria-hidden="true"></div>
