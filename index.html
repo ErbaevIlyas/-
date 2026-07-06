@@ -1161,6 +1161,28 @@ section {
   border-left: 3px solid var(--gold);
 }
 
+/* На десктопе карточка подтверждения — на всю ширину ряда */
+@media (min-width: 721px) {
+  .detail-card.highlight {
+    grid-column: 1 / -1;
+    max-width: 100%;
+    padding: 34px 32px 30px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 22px;
+    align-items: center;
+  }
+  .detail-card.highlight .detail-ic {
+    margin-bottom: 0;
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+  .detail-card.highlight .detail-title {
+    margin-bottom: 4px;
+  }
+}
+
 .detail-deadline {
   display: inline-block;
   font-family: 'Cormorant Garamond', serif;
@@ -2937,19 +2959,19 @@ body.cover-opened .cover {
       <div class="reveal-mask"><span class="mask-inner"><h2 class="details-h">Несколько важных&nbsp;слов</h2></span></div>
 
       <div class="details-grid">
-        <div class="detail-card reveal-up" data-d="2">
+        <div class="detail-card reveal-up" data-d="1">
           <div class="detail-ic">🎁</div>
           <h3 class="detail-title">Пожелания по&nbsp;подаркам</h3>
           <p class="detail-text">Ваше присутствие в день нашей свадьбы&nbsp;— самый значимый подарок для нас!<br>Но будем рады любой другой альтернативе <strong>(в&nbsp;денежном эквиваленте)</strong>.</p>
         </div>
 
-        <div class="detail-card reveal-up" data-d="3">
+        <div class="detail-card reveal-up" data-d="2">
           <div class="detail-ic">🤫</div>
           <h3 class="detail-title">«Горько!»&nbsp;— не&nbsp;надо</h3>
           <p class="detail-text">Будем благодарны, если вы воздержитесь от&nbsp;криков «Горько» на&nbsp;празднике.</p>
         </div>
 
-        <div class="detail-card highlight reveal-up" data-d="4">
+        <div class="detail-card highlight reveal-up" data-d="3">
           <div class="detail-ic">✎</div>
           <h3 class="detail-title">Ждём вашего ответа</h3>
           <p class="detail-text">Пожалуйста, подтвердите своё присутствие</p>
